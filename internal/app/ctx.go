@@ -12,4 +12,5 @@ type Ctx struct {
 	ValidateTokenModule           IValidateTokenModule
 	DepositWalletBalanceModule    IDepositWalletBalanceModule
 	WithdrawalWalletBalanceModule IWithdrawalWalletBalanceModule
+	DisableWalletModule           IDisableWalletModule
 }

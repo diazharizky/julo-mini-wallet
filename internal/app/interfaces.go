@@ -10,6 +10,7 @@ type IUserRepository interface{}
 type IWalletRepository interface {
 	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
 	Create(accountID uuid.UUID) (newWallet *models.Wallet, err error)
+	Disable(wallet *models.Wallet) error
 }
 
 type ITransactionRepository interface {
@@ -42,4 +43,8 @@ type IDepositWalletBalanceModule interface {
 
 type IWithdrawalWalletBalanceModule interface {
 	Call(newWithdrawal *models.Withdrawal) error
+}
+
+type IDisableWalletModule interface {
+	Call(accountID uuid.UUID) (*models.Wallet, error)
 }
