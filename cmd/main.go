@@ -20,6 +20,7 @@ func main() {
 	appCtx.GenerateTokenModule = modules.NewGenerateTokenModule()
 	appCtx.ValidateTokenModule = modules.NewValidateTokenModule()
 	appCtx.DepositWalletBalanceModule = modules.NewDepositWalletBalanceModule(appCtx)
+	appCtx.WithdrawalWalletBalanceModule = modules.NewWithdrawalWalletBalanceModule(appCtx)
 
 	svr := server.New(appCtx)
 

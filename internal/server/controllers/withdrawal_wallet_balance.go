@@ -6,11 +6,33 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
-		resp := models.SuccessResponse("balance deducted")
+		var newWithdrawal models.Withdrawal
+
+		if err := ctx.BodyParser(&newWithdrawal); err != nil {
+			return ctx.
+				Status(http.StatusBadRequest).
+				JSON(models.FailedResponse(map[string]interface{}{
+					"message": "Failed to parse body",
+				}))
+		}
+
+		accountID := ctx.Locals("account_id").(string)
+		newWithdrawal.WithdrawnBy = uuid.MustParse(accountID)
+
+		if err := appCtx.WithdrawalWalletBalanceModule.Call(&newWithdrawal); err != nil {
+			return ctx.
+				Status(http.StatusInternalServerError).
+				JSON(models.FatalResponse())
+		}
+
+		resp := models.SuccessResponse(map[string]interface{}{
+			"withdrawal": newWithdrawal,
+		})
 
 		return ctx.
 			Status(http.StatusOK).

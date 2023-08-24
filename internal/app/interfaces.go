@@ -39,3 +39,7 @@ type IValidateTokenModule interface {
 type IDepositWalletBalanceModule interface {
 	Call(newDeposit *models.Deposit) error
 }
+
+type IWithdrawalWalletBalanceModule interface {
+	Call(newWithdrawal *models.Withdrawal) error
+}
