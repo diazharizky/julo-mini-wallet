@@ -47,13 +47,15 @@ func (r walletRepository) Create(accountID uuid.UUID) (*models.Wallet, error) {
 func (r walletRepository) Enable(wallet *models.Wallet) error {
 	now := time.Now()
 
+	wallet.DisabledAt = nil
+
 	db := r.db.Model(wallet)
 	return db.
 		Where("id = ?", wallet.ID.String()).
-		Updates(models.Wallet{
-			Status:     enum.WalletStatusEnabled,
-			EnabledAt:  &now,
-			DisabledAt: nil,
+		Updates(map[string]interface{}{
+			"status":      enum.WalletStatusEnabled,
+			"enabled_at":  &now,
+			"disabled_at": gorm.Expr("NULL"),
 		}).
 		Error
 }
@@ -61,12 +63,15 @@ func (r walletRepository) Enable(wallet *models.Wallet) error {
 func (r walletRepository) Disable(wallet *models.Wallet) error {
 	now := time.Now()
 
+	wallet.EnabledAt = nil
+
 	db := r.db.Model(wallet)
 	return db.
 		Where("id = ?", wallet.ID.String()).
-		Updates(models.Wallet{
-			Status:     enum.WalletStatusDisabled,
-			DisabledAt: &now,
+		Updates(map[string]interface{}{
+			"status":      enum.WalletStatusDisabled,
+			"disabled_at": &now,
+			"enabled_at":  gorm.Expr("NULL"),
 		}).
 		Error
 }
