@@ -23,11 +23,11 @@ func New(appCtx app.Ctx) (svr *fiber.App) {
 				walletEndpoint := v1Protected.Group("/wallet")
 				{
 					walletEndpoint.Post("/", controllers.EnableWalletController(appCtx))
-					walletEndpoint.Get("/", controllers.GetWalletController(appCtx))
-					walletEndpoint.Get("/transactions", controllers.ListWalletTransactionsController(appCtx))
 
 					walletMustBeEnabledEndpoint := walletEndpoint.Use(middlewares.IsWalletEnabled(appCtx))
 					{
+						walletMustBeEnabledEndpoint.Get("/", controllers.GetWalletController(appCtx))
+						walletMustBeEnabledEndpoint.Get("/transactions", controllers.ListWalletTransactionsController(appCtx))
 						walletMustBeEnabledEndpoint.Patch("/", controllers.DisableWalletController(appCtx))
 						walletMustBeEnabledEndpoint.Post("/deposits", controllers.DepositWalletBalanceController(appCtx))
 						walletMustBeEnabledEndpoint.Post("/withdrawals", controllers.WithdrawalWalletBalanceController(appCtx))
