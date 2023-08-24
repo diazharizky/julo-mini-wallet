@@ -1,8 +1,6 @@
 package modules
 
 import (
-	"errors"
-
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
@@ -23,7 +21,7 @@ func (m enableWalletModule) Call(accountID uuid.UUID) (*models.Wallet, error) {
 	}
 
 	if existingWallet != nil {
-		return nil, errors.New("wallet is already enabled")
+		return nil, app.WalletIsAlreadyEnabled
 	}
 
 	newWallet, err := m.appCtx.WalletRepository.Create(accountID)

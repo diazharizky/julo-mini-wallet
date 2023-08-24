@@ -23,6 +23,12 @@ func FailedResponse(data interface{}) HTTPResponse {
 
 func FatalResponse() HTTPResponse {
 	return FailedResponse(map[string]interface{}{
-		"message": "Internal server error",
+		"error": "internal server error",
+	})
+}
+
+func FailedParseBody() HTTPResponse {
+	return FailedResponse(map[string]interface{}{
+		"error": "failed to parse body",
 	})
 }

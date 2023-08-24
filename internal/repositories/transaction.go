@@ -6,12 +6,15 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/enum"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-type transactionRepository struct{}
+type transactionRepository struct {
+	db *gorm.DB
+}
 
-func NewTransactionRepository() transactionRepository {
-	return transactionRepository{}
+func NewTransactionRepository(db *gorm.DB) transactionRepository {
+	return transactionRepository{db}
 }
 
 func (transactionRepository) List(walletID uuid.UUID) ([]models.Transaction, error) {

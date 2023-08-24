@@ -26,7 +26,7 @@ func AuthorizationMiddleware(appCtx app.Ctx) func(*fiber.Ctx) error {
 			return ctx.SendStatus(http.StatusUnauthorized)
 		}
 
-		ctx.Locals("account_id", accountID)
+		ctx.Locals("account_id", *accountID)
 
 		return ctx.Next()
 	}

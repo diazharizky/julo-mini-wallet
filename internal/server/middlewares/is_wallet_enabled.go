@@ -26,7 +26,7 @@ func IsWalletEnabled(appCtx app.Ctx) func(*fiber.Ctx) error {
 			return ctx.
 				Status(http.StatusConflict).
 				JSON(map[string]interface{}{
-					"message": "wallet is disabled",
+					"error": "wallet is disabled",
 				})
 		}
 

@@ -1,29 +1,45 @@
 package repositories
 
 import (
+	"errors"
 	"time"
 
 	"github.com/diazharizky/julo-mini-wallet/internal/enum"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-type walletRepository struct{}
-
-func NewWalletRepository() walletRepository {
-	return walletRepository{}
+type walletRepository struct {
+	db *gorm.DB
 }
 
-func (walletRepository) GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error) {
-	wallet = models.NewDefaultWAllet(accountID)
-
-	return
+func NewWalletRepository(db *gorm.DB) walletRepository {
+	return walletRepository{db}
 }
 
-func (walletRepository) Create(accountID uuid.UUID) (newWallet *models.Wallet, err error) {
-	newWallet = models.NewDefaultWAllet(accountID)
+func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, error) {
+	var wallet models.Wallet
 
-	return
+	if err := r.db.First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
+	if wallet.ID == uuid.Nil {
+		return nil, nil
+	}
+
+	return &wallet, nil
+}
+
+func (r walletRepository) Create(accountID uuid.UUID) (*models.Wallet, error) {
+	newWallet := models.NewDefaultWAllet(accountID)
+
+	if err := r.db.Create(&newWallet).Error; err != nil {
+		return nil, err
+	}
+
+	return newWallet, nil
 }
 
 func (walletRepository) Disable(wallet *models.Wallet) error {

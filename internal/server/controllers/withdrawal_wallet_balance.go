@@ -16,9 +16,7 @@ func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 		if err := ctx.BodyParser(&newWithdrawal); err != nil {
 			return ctx.
 				Status(http.StatusBadRequest).
-				JSON(models.FailedResponse(map[string]interface{}{
-					"message": "Failed to parse body",
-				}))
+				JSON(models.FailedParseBody())
 		}
 
 		accountID := ctx.Locals("account_id").(string)

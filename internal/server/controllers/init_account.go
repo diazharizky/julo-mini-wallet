@@ -20,9 +20,7 @@ func InitAccountController(appCtx app.Ctx) func(*fiber.Ctx) error {
 		if err := ctx.BodyParser(&params); err != nil {
 			return ctx.
 				Status(http.StatusBadRequest).
-				JSON(models.FailedResponse(map[string]interface{}{
-					"message": "Failed to parse body",
-				}))
+				JSON(models.FailedParseBody())
 		}
 
 		token := utils.EncodeToString(params.ID.String())

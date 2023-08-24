@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:11.10-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-julo}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-julo}
+      - POSTGRES_DB=${POSTGRES_DB:-julo}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5432:5432
