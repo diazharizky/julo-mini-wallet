@@ -11,17 +11,16 @@ type Wallet struct {
 	ID         uuid.UUID         `json:"id" gorm:"primaryKey;column:id"`
 	OwnedBy    uuid.UUID         `json:"owned_by" gorm:"column:owned_by;not null"`
 	Status     enum.WalletStatus `json:"status" gorm:"column:status;not null"`
-	EnabledAt  time.Time         `json:"enabled_at" gorm:"column:enabled_at;not null"`
+	EnabledAt  *time.Time        `json:"enabled_at,omitempty" gorm:"column:enabled_at"`
 	DisabledAt *time.Time        `json:"disabled_at,omitempty" gorm:"column:disabled_at"`
 	Balance    float64           `json:"balance" gorm:"column:balance;not null"`
 }
 
 func NewDefaultWAllet(accountID uuid.UUID) *Wallet {
 	return &Wallet{
-		ID:        uuid.New(),
-		OwnedBy:   accountID,
-		Status:    enum.WalletStatusEnabled,
-		EnabledAt: time.Now(),
-		Balance:   0,
+		ID:      uuid.New(),
+		OwnedBy: accountID,
+		Status:  enum.WalletStatusDisabled,
+		Balance: 0,
 	}
 }

@@ -44,12 +44,31 @@ func (r walletRepository) Create(accountID uuid.UUID) (*models.Wallet, error) {
 	return newWallet, nil
 }
 
-func (walletRepository) Disable(wallet *models.Wallet) error {
+func (r walletRepository) Enable(wallet *models.Wallet) error {
 	now := time.Now()
-	wallet.Status = enum.WalletStatusDisabled
-	wallet.DisabledAt = &now
 
-	return nil
+	db := r.db.Model(wallet)
+	return db.
+		Where("id = ?", wallet.ID.String()).
+		Updates(models.Wallet{
+			Status:     enum.WalletStatusEnabled,
+			EnabledAt:  &now,
+			DisabledAt: nil,
+		}).
+		Error
+}
+
+func (r walletRepository) Disable(wallet *models.Wallet) error {
+	now := time.Now()
+
+	db := r.db.Model(wallet)
+	return db.
+		Where("id = ?", wallet.ID.String()).
+		Updates(models.Wallet{
+			Status:     enum.WalletStatusDisabled,
+			DisabledAt: &now,
+		}).
+		Error
 }
 
 func (r walletRepository) Deposit(wallet *models.Wallet, depositAmount float64) error {

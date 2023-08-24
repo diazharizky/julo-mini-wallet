@@ -19,6 +19,7 @@ func main() {
 	appCtx.WalletRepository = repositories.NewWalletRepository(db)
 	appCtx.TransactionRepository = repositories.NewTransactionRepository(db)
 
+	appCtx.InitAccountModule = modules.NewInitAccountModule(appCtx)
 	appCtx.EnableWalletModule = modules.NewEnableWalletModule(appCtx)
 	appCtx.ListWalletTransactionsModule = modules.NewListWalletTransactionsModule(appCtx)
 	appCtx.DepositWalletBalanceModule = modules.NewDepositWalletBalanceModule(appCtx)

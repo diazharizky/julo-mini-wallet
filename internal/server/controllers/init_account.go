@@ -23,6 +23,12 @@ func InitAccountController(appCtx app.Ctx) func(*fiber.Ctx) error {
 				JSON(models.FailedParseBody())
 		}
 
+		if err := appCtx.InitAccountModule.Call(params.ID); err != nil {
+			return ctx.
+				Status(http.StatusInternalServerError).
+				JSON(models.FatalResponse())
+		}
+
 		token := utils.EncodeToString(params.ID.String())
 		resp := models.SuccessResponse(map[string]interface{}{
 			"token": token,

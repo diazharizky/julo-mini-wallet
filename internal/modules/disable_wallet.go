@@ -1,8 +1,6 @@
 package modules
 
 import (
-	"errors"
-
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
@@ -23,7 +21,7 @@ func (m disableWalletModule) Call(accountID uuid.UUID) (*models.Wallet, error) {
 	}
 
 	if wallet == nil {
-		return nil, errors.New("wallet is not enabled")
+		return nil, app.WalletIsDisabled
 	}
 
 	if err := m.appCtx.WalletRepository.Disable(wallet); err != nil {
