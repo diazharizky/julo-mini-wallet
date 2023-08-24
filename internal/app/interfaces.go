@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type IUserRepository interface{}
+type IAccountRepository interface{}
 
 type IWalletRepository interface {
 	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
