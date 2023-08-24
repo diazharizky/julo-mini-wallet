@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
+	"github.com/diazharizky/julo-mini-wallet/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,7 +21,7 @@ func AuthorizationMiddleware(appCtx app.Ctx) func(*fiber.Ctx) error {
 			return ctx.SendStatus(http.StatusUnauthorized)
 		}
 
-		accountID, err := appCtx.ValidateTokenModule.Call(val[1])
+		accountID, err := utils.DecodeToString(val[1])
 		if err != nil {
 			return ctx.SendStatus(http.StatusUnauthorized)
 		}

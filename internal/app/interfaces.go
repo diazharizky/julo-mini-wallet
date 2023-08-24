@@ -23,14 +23,6 @@ type IListWalletTransactionsModule interface {
 	Call(accountID uuid.UUID) (transactions []models.Transaction, err error)
 }
 
-type IGenerateTokenModule interface {
-	Call(accountID uuid.UUID) string
-}
-
-type IValidateTokenModule interface {
-	Call(token string) (string, error)
-}
-
 type IDepositWalletBalanceModule interface {
 	Call(newDeposit *models.Deposit) error
 }

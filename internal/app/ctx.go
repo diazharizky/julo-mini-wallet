@@ -6,8 +6,6 @@ type Ctx struct {
 
 	EnableWalletModule            IEnableWalletModule
 	ListWalletTransactionsModule  IListWalletTransactionsModule
-	GenerateTokenModule           IGenerateTokenModule
-	ValidateTokenModule           IValidateTokenModule
 	DepositWalletBalanceModule    IDepositWalletBalanceModule
 	WithdrawalWalletBalanceModule IWithdrawalWalletBalanceModule
 	DisableWalletModule           IDisableWalletModule

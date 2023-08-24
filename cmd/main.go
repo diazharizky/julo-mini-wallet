@@ -21,8 +21,6 @@ func main() {
 
 	appCtx.EnableWalletModule = modules.NewEnableWalletModule(appCtx)
 	appCtx.ListWalletTransactionsModule = modules.NewListWalletTransactionsModule(appCtx)
-	appCtx.GenerateTokenModule = modules.NewGenerateTokenModule()
-	appCtx.ValidateTokenModule = modules.NewValidateTokenModule()
 	appCtx.DepositWalletBalanceModule = modules.NewDepositWalletBalanceModule(appCtx)
 	appCtx.WithdrawalWalletBalanceModule = modules.NewWithdrawalWalletBalanceModule(appCtx)
 	appCtx.DisableWalletModule = modules.NewDisableWalletModule(appCtx)
