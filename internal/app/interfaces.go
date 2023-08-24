@@ -5,8 +5,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type IAccountRepository interface{}
-
 type IWalletRepository interface {
 	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
 	Create(accountID uuid.UUID) (newWallet *models.Wallet, err error)
@@ -30,7 +28,7 @@ type IListWalletTransactionsModule interface {
 }
 
 type IGenerateTokenModule interface {
-	Call(accountId uuid.UUID) string
+	Call(accountID uuid.UUID) string
 }
 
 type IValidateTokenModule interface {

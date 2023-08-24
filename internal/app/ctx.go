@@ -1,7 +1,6 @@
 package app
 
 type Ctx struct {
-	AccountRepository     IAccountRepository
 	WalletRepository      IWalletRepository
 	TransactionRepository ITransactionRepository
 
