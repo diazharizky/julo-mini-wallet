@@ -25,9 +25,9 @@ func IsWalletEnabled(appCtx app.Ctx) func(*fiber.Ctx) error {
 		if wallet.Status == enum.WalletStatusDisabled {
 			return ctx.
 				Status(http.StatusConflict).
-				JSON(map[string]interface{}{
+				JSON(models.FailedResponse(map[string]interface{}{
 					"error": "wallet is disabled",
-				})
+				}))
 		}
 
 		return ctx.Next()
