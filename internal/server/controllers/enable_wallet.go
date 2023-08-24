@@ -20,11 +20,15 @@ func EnableWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 			return ctx.
 				Status(http.StatusInternalServerError).
 				JSON(
-					models.FailedResponse("failed to enable wallet"),
+					models.FailedResponse(map[string]interface{}{
+						"message": "failed to enable wallet",
+					}),
 				)
 		}
 
-		resp := models.SuccessResponse(newWallet)
+		resp := models.SuccessResponse(map[string]interface{}{
+			"wallet": newWallet,
+		})
 
 		return ctx.
 			Status(http.StatusOK).

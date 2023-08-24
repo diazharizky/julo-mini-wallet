@@ -12,7 +12,9 @@ func NewWalletRepository() walletRepository {
 }
 
 func (walletRepository) GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error) {
-	return nil, nil
+	wallet = models.NewDefaultWAllet(accountID)
+
+	return
 }
 
 func (walletRepository) Create(accountID uuid.UUID) (newWallet *models.Wallet, err error) {
