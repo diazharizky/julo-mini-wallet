@@ -26,7 +26,7 @@ func New(appCtx app.Ctx) (svr *fiber.App) {
 
 					walletMustBeEnabledEndpoint := walletEndpoint.Use(middlewares.IsWalletEnabled(appCtx))
 					{
-						walletMustBeEnabledEndpoint.Get("/", controllers.GetWalletBalanceController(appCtx))
+						walletMustBeEnabledEndpoint.Get("/", controllers.GetWalletController(appCtx))
 						walletMustBeEnabledEndpoint.Patch("/", controllers.DisableWalletController(appCtx))
 						walletMustBeEnabledEndpoint.Get("/transactions", controllers.ListWalletTransactionsController(appCtx))
 						walletMustBeEnabledEndpoint.Post("/deposits", controllers.DepositWalletBalanceController(appCtx))

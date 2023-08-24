@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
+func GetWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		accountID := ctx.Locals("account_id").(string)
 
