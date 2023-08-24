@@ -20,3 +20,9 @@ func FailedResponse(data interface{}) HTTPResponse {
 		Data:   data,
 	}
 }
+
+func FatalResponse() HTTPResponse {
+	return FailedResponse(map[string]interface{}{
+		"message": "Internal server error",
+	})
+}
