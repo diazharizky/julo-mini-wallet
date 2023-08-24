@@ -24,8 +24,10 @@ func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 
 		if err := appCtx.WithdrawalWalletBalanceModule.Call(&newWithdrawal); err != nil {
 			return ctx.
-				Status(http.StatusInternalServerError).
-				JSON(models.FatalResponse())
+				Status(http.StatusBadRequest).
+				JSON(models.FailedResponse(map[string]interface{}{
+					"error": err.Error(),
+				}))
 		}
 
 		resp := models.SuccessResponse(map[string]interface{}{
