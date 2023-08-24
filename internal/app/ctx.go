@@ -10,4 +10,5 @@ type Ctx struct {
 	ListWalletTransactionsModule IListWalletTransactionsModule
 	GenerateTokenModule          IGenerateTokenModule
 	ValidateTokenModule          IValidateTokenModule
+	DepositWalletBalanceModule   IDepositWalletBalanceModule
 }

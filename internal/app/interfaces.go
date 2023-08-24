@@ -35,3 +35,7 @@ type IGenerateTokenModule interface {
 type IValidateTokenModule interface {
 	Call(token string) (string, error)
 }
+
+type IDepositWalletBalanceModule interface {
+	Call(newDeposit *models.Deposit) error
+}

@@ -13,12 +13,11 @@ func InitAccountController(appCtx app.Ctx) func(*fiber.Ctx) error {
 		var newAccount models.Account
 
 		if err := ctx.BodyParser(&newAccount); err != nil {
-			return ctx.Status(http.StatusBadRequest).JSON(models.HTTPResponse{
-				Status: "failed",
-				Data: map[string]interface{}{
+			return ctx.
+				Status(http.StatusBadRequest).
+				JSON(models.FailedResponse(map[string]interface{}{
 					"message": "Failed to parse body",
-				},
-			})
+				}))
 		}
 
 		token := appCtx.GenerateTokenModule.Call(newAccount.ID)
