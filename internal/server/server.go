@@ -13,22 +13,28 @@ func New(appCtx app.Ctx) (svr *fiber.App) {
 	})
 
 	api := svr.Group("/api")
-
-	v1 := api.Group("/v1")
-
-	v1.Post("/init", controllers.InitAccountController(appCtx))
-
-	v1Protected := v1.Use(middlewares.AuthorizationMiddleware(appCtx))
-
-	walletEndpoint := v1Protected.Group("/wallet")
 	{
-		walletEndpoint.Post("/", controllers.EnableWalletController(appCtx))
-		walletEndpoint.Get("/", controllers.GetWalletBalanceController(appCtx))
-		walletEndpoint.Patch("/", controllers.DisableWalletController(appCtx))
-		walletEndpoint.Get("/transactions", controllers.ListWalletTransactionsController(appCtx))
-		walletEndpoint.Post("/deposits", controllers.DepositWalletBalanceController(appCtx))
-		walletEndpoint.Post("/withdrawals", controllers.WithdrawalWalletBalanceController(appCtx))
-	}
+		v1 := api.Group("/v1")
+		{
+			v1.Post("/init", controllers.InitAccountController(appCtx))
 
+			v1Protected := v1.Use(middlewares.AuthorizationMiddleware(appCtx))
+			{
+				walletEndpoint := v1Protected.Group("/wallet")
+				{
+					walletEndpoint.Post("/", controllers.EnableWalletController(appCtx))
+
+					walletMustBeEnabledEndpoint := walletEndpoint.Use(middlewares.IsWalletEnabled(appCtx))
+					{
+						walletMustBeEnabledEndpoint.Get("/", controllers.GetWalletBalanceController(appCtx))
+						walletMustBeEnabledEndpoint.Patch("/", controllers.DisableWalletController(appCtx))
+						walletMustBeEnabledEndpoint.Get("/transactions", controllers.ListWalletTransactionsController(appCtx))
+						walletMustBeEnabledEndpoint.Post("/deposits", controllers.DepositWalletBalanceController(appCtx))
+						walletMustBeEnabledEndpoint.Post("/withdrawals", controllers.WithdrawalWalletBalanceController(appCtx))
+					}
+				}
+			}
+		}
+	}
 	return
 }
