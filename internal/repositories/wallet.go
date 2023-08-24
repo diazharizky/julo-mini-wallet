@@ -21,7 +21,8 @@ func NewWalletRepository(db *gorm.DB) walletRepository {
 func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, error) {
 	var wallet models.Wallet
 
-	if err := r.db.First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	db := r.db.Model(&models.Wallet{})
+	if err := db.First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
@@ -35,7 +36,8 @@ func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, e
 func (r walletRepository) Create(accountID uuid.UUID) (*models.Wallet, error) {
 	newWallet := models.NewDefaultWAllet(accountID)
 
-	if err := r.db.Create(&newWallet).Error; err != nil {
+	db := r.db.Model(&models.Wallet{})
+	if err := db.Create(&newWallet).Error; err != nil {
 		return nil, err
 	}
 
@@ -48,4 +50,9 @@ func (walletRepository) Disable(wallet *models.Wallet) error {
 	wallet.DisabledAt = &now
 
 	return nil
+}
+
+func (r walletRepository) Deposit(wallet *models.Wallet, depositAmount float64) error {
+	db := r.db.Model(wallet)
+	return db.Where("id = ?", wallet.ID.String()).Update("balance", wallet.Balance+depositAmount).Error
 }

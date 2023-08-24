@@ -9,9 +9,11 @@ type IWalletRepository interface {
 	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
 	Create(accountID uuid.UUID) (newWallet *models.Wallet, err error)
 	Disable(wallet *models.Wallet) error
+	Deposit(wallet *models.Wallet, depositAmount float64) error
 }
 
 type ITransactionRepository interface {
+	Create(newTransaction *models.Transaction) error
 	List(walletID uuid.UUID) (transactions []models.Transaction, err error)
 }
 

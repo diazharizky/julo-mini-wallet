@@ -12,5 +12,6 @@ CREATE TABLE transactions
     amount        real NOT NULL,
     reference_id  uuid NOT NULL,
     CONSTRAINT transactions_pk PRIMARY KEY (id),
+    CONSTRAINT transactions_unq_ref_id UNIQUE (reference_id),
     CONSTRAINT transactions_wallets_fk FOREIGN KEY (wallet_id) REFERENCES wallets (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
