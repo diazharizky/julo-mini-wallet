@@ -5,16 +5,20 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/modules"
 	"github.com/diazharizky/julo-mini-wallet/internal/repositories"
 	"github.com/diazharizky/julo-mini-wallet/internal/server"
+	"github.com/diazharizky/julo-mini-wallet/pkg/db"
 )
 
 func main() {
 	appCtx := app.Ctx{}
 
-	appCtx.UserRepository = repositories.NewUserRepository()
-	appCtx.WalletRepository = repositories.NewWalletRepository()
-	appCtx.TransactionRepository = repositories.NewTransactionRepository()
+	db, err := db.New().DB()
+	if err != nil {
+		panic("error unable to initialize db")
+	}
 
-	appCtx.InitializeAccountModule = modules.NewInitializeAccountModule(appCtx)
+	appCtx.WalletRepository = repositories.NewWalletRepository(db)
+	appCtx.TransactionRepository = repositories.NewTransactionRepository(db)
+
 	appCtx.EnableWalletModule = modules.NewEnableWalletModule(appCtx)
 	appCtx.ListWalletTransactionsModule = modules.NewListWalletTransactionsModule(appCtx)
 	appCtx.GenerateTokenModule = modules.NewGenerateTokenModule()

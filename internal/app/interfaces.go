@@ -15,10 +15,6 @@ type ITransactionRepository interface {
 	List(walletID uuid.UUID) (transactions []models.Transaction, err error)
 }
 
-type IInitializeAccountModule interface {
-	Call(customerXID uuid.UUID)
-}
-
 type IEnableWalletModule interface {
 	Call(accountID uuid.UUID) (newWallet *models.Wallet, err error)
 }
