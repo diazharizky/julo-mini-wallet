@@ -11,10 +11,10 @@ run:
 	go run cmd/main.go
 
 migrate-up:
-	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose up 2
+	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose up
 
 migrate-down:
-	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose down 2
+	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose down -all
 
 #############
 ### BUILD ###
