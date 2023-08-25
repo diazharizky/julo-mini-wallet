@@ -1,3 +1,7 @@
+###################
+### DEVELOPMENT ###
+###################
+
 .PHONY: tidy run migrate-up migrate-down
 
 tidy:
@@ -7,7 +11,20 @@ run:
 	go run cmd/main.go
 
 migrate-up:
-	migrate -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -path ./migrations -verbose up
+	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose up 2
 
 migrate-down:
-	migrate -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -path ./migrations -verbose down
+	docker run -v ./migrations:/migrations --network host migrate/migrate -path /migrations -database postgres://julo:julo@localhost:5432/julo?sslmode=disable -verbose down 2
+
+#############
+### BUILD ###
+#############
+
+.PHONY: compile build
+
+compile:
+	rm -rf bin/app && \
+	go build -v -o bin/app ./cmd
+
+build:
+	docker build -t julo-mini-wallet:latest .
