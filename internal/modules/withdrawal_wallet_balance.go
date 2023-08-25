@@ -38,6 +38,7 @@ func (m withdrawalWalletBalanceModule) Call(newWithdrawal *models.Withdrawal) er
 		Amount:      withdrawalAmount,
 		ReferenceID: newWithdrawal.ReferenceID,
 	}
+
 	if err := m.appCtx.TransactionRepository.Create(tx, &newTrx); err != nil {
 		if err := m.appCtx.TransactionRepository.RollbackTx(tx); err != nil {
 			fmt.Printf("rollback transaction error: %v\n", err)
