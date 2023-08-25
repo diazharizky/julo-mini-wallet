@@ -8,6 +8,7 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type walletRepository struct {
@@ -30,8 +31,12 @@ func (r walletRepository) RollbackTx(tx *gorm.DB) error {
 	return tx.Rollback().Error
 }
 
-func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, error) {
+func (r walletRepository) GetByAccountID(accountID uuid.UUID, clauses ...clause.Expression) (*models.Wallet, error) {
 	var wallet models.Wallet
+
+	if len(clauses) > 0 {
+		r.db = r.db.Clauses(clauses...)
+	}
 
 	if err := r.db.Model(wallet).First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err

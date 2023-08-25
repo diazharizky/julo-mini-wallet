@@ -4,6 +4,7 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type IAccountRepository interface {
@@ -17,7 +18,7 @@ type IWalletRepository interface {
 	BeginTx() *gorm.DB
 	CommitTx(tx *gorm.DB) error
 	RollbackTx(tx *gorm.DB) error
-	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
+	GetByAccountID(accountID uuid.UUID, clauses ...clause.Expression) (wallet *models.Wallet, err error)
 	Create(tx *gorm.DB, accountID uuid.UUID) (newWallet *models.Wallet, err error)
 	Enable(tx *gorm.DB, wallet *models.Wallet) error
 	Disable(tx *gorm.DB, wallet *models.Wallet) error

@@ -6,6 +6,7 @@ import (
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/enum"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
+	"gorm.io/gorm/clause"
 )
 
 type withdrawalWalletBalanceModule struct {
@@ -17,7 +18,7 @@ func NewWithdrawalWalletBalanceModule(appCtx app.Ctx) withdrawalWalletBalanceMod
 }
 
 func (m withdrawalWalletBalanceModule) Call(newWithdrawal *models.Withdrawal) error {
-	wallet, err := m.appCtx.WalletRepository.GetByAccountID(newWithdrawal.WithdrawnBy)
+	wallet, err := m.appCtx.WalletRepository.GetByAccountID(newWithdrawal.WithdrawnBy, clause.Locking{Strength: "UPDATE"})
 	if err != nil {
 		return err
 	}
