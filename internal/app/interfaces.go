@@ -3,19 +3,33 @@ package app
 import (
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
+type IAccountRepository interface {
+	BeginTx() *gorm.DB
+	CommitTx(tx *gorm.DB) error
+	RollbackTx(tx *gorm.DB) error
+	Create(tx *gorm.DB, newAccount *models.Account) error
+}
+
 type IWalletRepository interface {
+	BeginTx() *gorm.DB
+	CommitTx(tx *gorm.DB) error
+	RollbackTx(tx *gorm.DB) error
 	GetByAccountID(accountID uuid.UUID) (wallet *models.Wallet, err error)
-	Create(accountID uuid.UUID) (newWallet *models.Wallet, err error)
-	Enable(wallet *models.Wallet) error
-	Disable(wallet *models.Wallet) error
-	Deposit(wallet *models.Wallet, depositAmount float64) error
+	Create(tx *gorm.DB, accountID uuid.UUID) (newWallet *models.Wallet, err error)
+	Enable(tx *gorm.DB, wallet *models.Wallet) error
+	Disable(tx *gorm.DB, wallet *models.Wallet) error
+	DepositBalance(tx *gorm.DB, wallet *models.Wallet, depositAmount float64) error
 }
 
 type ITransactionRepository interface {
-	Create(newTransaction *models.Transaction) error
-	List(walletID uuid.UUID) (transactions []models.Transaction, err error)
+	BeginTx() *gorm.DB
+	CommitTx(tx *gorm.DB) error
+	RollbackTx(tx *gorm.DB) error
+	Create(tx *gorm.DB, newTransaction *models.Transaction) error
+	ListByWalletID(walletID uuid.UUID) (transactions []models.Transaction, err error)
 }
 
 type IInitAccountModule interface {

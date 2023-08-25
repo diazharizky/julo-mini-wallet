@@ -25,7 +25,7 @@ func (m enableWalletModule) Call(accountID uuid.UUID) (*models.Wallet, error) {
 		return nil, app.WalletIsAlreadyEnabled
 	}
 
-	if err := m.appCtx.WalletRepository.Enable(wallet); err != nil {
+	if err := m.appCtx.WalletRepository.Enable(nil, wallet); err != nil {
 		return nil, err
 	}
 

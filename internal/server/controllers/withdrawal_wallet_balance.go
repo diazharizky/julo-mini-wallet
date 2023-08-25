@@ -12,10 +12,9 @@ import (
 func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		var newWithdrawal models.Withdrawal
-
 		if err := ctx.BodyParser(&newWithdrawal); err != nil {
 			return ctx.
-				Status(http.StatusBadRequest).
+				Status(http.StatusInternalServerError).
 				JSON(models.FailedParseBody())
 		}
 
@@ -24,7 +23,7 @@ func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 
 		if err := appCtx.WithdrawalWalletBalanceModule.Call(&newWithdrawal); err != nil {
 			return ctx.
-				Status(http.StatusBadRequest).
+				Status(http.StatusInternalServerError).
 				JSON(models.FailedResponse(map[string]interface{}{
 					"error": err.Error(),
 				}))
@@ -34,8 +33,6 @@ func WithdrawalWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 			"withdrawal": newWithdrawal,
 		})
 
-		return ctx.
-			Status(http.StatusOK).
-			JSON(resp)
+		return ctx.Status(http.StatusOK).JSON(resp)
 	}
 }

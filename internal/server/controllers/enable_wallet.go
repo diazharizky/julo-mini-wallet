@@ -12,26 +12,21 @@ import (
 func EnableWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		accountID := ctx.Locals("account_id").(string)
-
-		newWallet, err := appCtx.EnableWalletModule.Call(
+		wallet, err := appCtx.EnableWalletModule.Call(
 			uuid.MustParse(accountID),
 		)
 		if err != nil {
 			return ctx.
 				Status(http.StatusInternalServerError).
-				JSON(
-					models.FailedResponse(map[string]interface{}{
-						"error": err.Error(),
-					}),
-				)
+				JSON(models.FailedResponse(map[string]interface{}{
+					"error": err.Error(),
+				}))
 		}
 
 		resp := models.SuccessResponse(map[string]interface{}{
-			"wallet": newWallet,
+			"wallet": wallet,
 		})
 
-		return ctx.
-			Status(http.StatusOK).
-			JSON(resp)
+		return ctx.Status(http.StatusOK).JSON(resp)
 	}
 }

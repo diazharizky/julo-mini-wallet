@@ -1,6 +1,8 @@
 package modules
 
 import (
+	"fmt"
+
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/enum"
 	"github.com/diazharizky/julo-mini-wallet/internal/models"
@@ -20,8 +22,10 @@ func (m depositWalletBalanceModule) Call(newDeposit *models.Deposit) error {
 		return err
 	}
 
+	tx := m.appCtx.WalletRepository.BeginTx()
+
 	depositAmount := newDeposit.Amount
-	if err := m.appCtx.WalletRepository.Deposit(wallet, depositAmount); err != nil {
+	if err := m.appCtx.WalletRepository.DepositBalance(tx, wallet, depositAmount); err != nil {
 		return err
 	}
 
@@ -32,8 +36,16 @@ func (m depositWalletBalanceModule) Call(newDeposit *models.Deposit) error {
 		ReferenceID: newDeposit.ReferenceID,
 	}
 
-	if err := m.appCtx.TransactionRepository.Create(&newTrx); err != nil {
+	if err := m.appCtx.TransactionRepository.Create(tx, &newTrx); err != nil {
+		if err := m.appCtx.TransactionRepository.RollbackTx(tx); err != nil {
+			fmt.Printf("rollback transaction error: %v\n", err)
+		}
+
 		return err
+	}
+
+	if err := m.appCtx.TransactionRepository.CommitTx(tx); err != nil {
+		fmt.Printf("commit transaction error: %v\n", err)
 	}
 
 	newDeposit.ID = newTrx.ID

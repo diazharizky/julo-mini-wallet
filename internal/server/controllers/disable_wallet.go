@@ -19,7 +19,7 @@ func DisableWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 
 		if err := ctx.BodyParser(&params); err != nil {
 			return ctx.
-				Status(http.StatusBadRequest).
+				Status(http.StatusInternalServerError).
 				JSON(models.FailedParseBody())
 		}
 

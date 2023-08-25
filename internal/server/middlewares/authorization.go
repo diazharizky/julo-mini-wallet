@@ -21,7 +21,7 @@ func AuthorizationMiddleware(appCtx app.Ctx) func(*fiber.Ctx) error {
 			return ctx.SendStatus(http.StatusUnauthorized)
 		}
 
-		accountID, err := utils.DecodeToString(val[1])
+		accountID, err := utils.Decode(val[1])
 		if err != nil {
 			return ctx.SendStatus(http.StatusUnauthorized)
 		}

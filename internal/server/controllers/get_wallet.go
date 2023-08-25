@@ -12,7 +12,6 @@ import (
 func GetWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		accountID := ctx.Locals("account_id").(string)
-
 		wallet, err := appCtx.WalletRepository.GetByAccountID(
 			uuid.MustParse(accountID),
 		)
@@ -26,8 +25,6 @@ func GetWalletController(appCtx app.Ctx) func(*fiber.Ctx) error {
 			"wallet": wallet,
 		})
 
-		return ctx.
-			Status(http.StatusOK).
-			JSON(resp)
+		return ctx.Status(http.StatusOK).JSON(resp)
 	}
 }

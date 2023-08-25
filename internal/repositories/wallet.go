@@ -18,11 +18,22 @@ func NewWalletRepository(db *gorm.DB) walletRepository {
 	return walletRepository{db}
 }
 
+func (r walletRepository) BeginTx() *gorm.DB {
+	return r.db.Begin()
+}
+
+func (r walletRepository) CommitTx(tx *gorm.DB) error {
+	return tx.Commit().Error
+}
+
+func (r walletRepository) RollbackTx(tx *gorm.DB) error {
+	return tx.Rollback().Error
+}
+
 func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, error) {
 	var wallet models.Wallet
 
-	db := r.db.Model(&models.Wallet{})
-	if err := db.First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err := r.db.Model(wallet).First(&wallet, "owned_by = ?", accountID.String()).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
@@ -33,24 +44,33 @@ func (r walletRepository) GetByAccountID(accountID uuid.UUID) (*models.Wallet, e
 	return &wallet, nil
 }
 
-func (r walletRepository) Create(accountID uuid.UUID) (*models.Wallet, error) {
+func (r walletRepository) Create(tx *gorm.DB, accountID uuid.UUID) (*models.Wallet, error) {
+	db := r.db
+	if tx != nil {
+		db = tx
+	}
+
 	newWallet := models.NewDefaultWAllet(accountID)
 
-	db := r.db.Model(&models.Wallet{})
-	if err := db.Create(&newWallet).Error; err != nil {
+	if err := db.Model(newWallet).Create(newWallet).Error; err != nil {
 		return nil, err
 	}
 
 	return newWallet, nil
 }
 
-func (r walletRepository) Enable(wallet *models.Wallet) error {
+func (r walletRepository) Enable(tx *gorm.DB, wallet *models.Wallet) error {
+	db := r.db
+	if tx != nil {
+		db = tx
+	}
+
 	now := time.Now()
 
 	wallet.DisabledAt = nil
 
-	db := r.db.Model(wallet)
 	return db.
+		Model(wallet).
 		Where("id = ?", wallet.ID.String()).
 		Updates(map[string]interface{}{
 			"status":      enum.WalletStatusEnabled,
@@ -60,13 +80,18 @@ func (r walletRepository) Enable(wallet *models.Wallet) error {
 		Error
 }
 
-func (r walletRepository) Disable(wallet *models.Wallet) error {
+func (r walletRepository) Disable(tx *gorm.DB, wallet *models.Wallet) error {
+	db := r.db
+	if tx != nil {
+		db = tx
+	}
+
 	now := time.Now()
 
 	wallet.EnabledAt = nil
 
-	db := r.db.Model(wallet)
 	return db.
+		Model(wallet).
 		Where("id = ?", wallet.ID.String()).
 		Updates(map[string]interface{}{
 			"status":      enum.WalletStatusDisabled,
@@ -76,7 +101,15 @@ func (r walletRepository) Disable(wallet *models.Wallet) error {
 		Error
 }
 
-func (r walletRepository) Deposit(wallet *models.Wallet, depositAmount float64) error {
-	db := r.db.Model(wallet)
-	return db.Where("id = ?", wallet.ID.String()).Update("balance", wallet.Balance+depositAmount).Error
+func (r walletRepository) DepositBalance(tx *gorm.DB, wallet *models.Wallet, depositAmount float64) error {
+	db := r.db
+	if tx != nil {
+		db = tx
+	}
+
+	return db.
+		Model(wallet).
+		Where("id = ?", wallet.ID.String()).
+		Update("balance", wallet.Balance+depositAmount).
+		Error
 }

@@ -24,7 +24,7 @@ func (m disableWalletModule) Call(accountID uuid.UUID) (*models.Wallet, error) {
 		return nil, app.WalletIsDisabled
 	}
 
-	if err := m.appCtx.WalletRepository.Disable(wallet); err != nil {
+	if err := m.appCtx.WalletRepository.Disable(nil, wallet); err != nil {
 		return nil, err
 	}
 

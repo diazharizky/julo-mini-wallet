@@ -12,7 +12,6 @@ import (
 func ListWalletTransactionsController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		accountID := ctx.Locals("account_id").(string)
-
 		transactions, err := appCtx.ListWalletTransactionsModule.Call(
 			uuid.MustParse(accountID),
 		)

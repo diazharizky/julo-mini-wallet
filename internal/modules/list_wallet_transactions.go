@@ -20,7 +20,7 @@ func (m listWalletTransactionsModule) Call(accountID uuid.UUID) ([]models.Transa
 		return nil, err
 	}
 
-	transactions, err := m.appCtx.TransactionRepository.List(wallet.ID)
+	transactions, err := m.appCtx.TransactionRepository.ListByWalletID(wallet.ID)
 	if err != nil {
 		return nil, err
 	}

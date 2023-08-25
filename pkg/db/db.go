@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -27,10 +28,15 @@ func New() dbClient {
 	}
 }
 
-func (client dbClient) DB() (*gorm.DB, error) {
-	return gorm.Open(
+func (client dbClient) DB() *gorm.DB {
+	db, err := gorm.Open(
 		postgres.Open(client.dsn()), &gorm.Config{},
 	)
+	if err != nil {
+		log.Fatalf("error unable to initialize db: %v", err)
+	}
+
+	return db
 }
 
 func (client dbClient) dsn() string {

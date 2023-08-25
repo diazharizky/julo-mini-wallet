@@ -12,10 +12,9 @@ import (
 func DepositWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
 		var newDeposit models.Deposit
-
 		if err := ctx.BodyParser(&newDeposit); err != nil {
 			return ctx.
-				Status(http.StatusBadRequest).
+				Status(http.StatusInternalServerError).
 				JSON(models.FailedParseBody())
 		}
 
@@ -32,8 +31,6 @@ func DepositWalletBalanceController(appCtx app.Ctx) func(*fiber.Ctx) error {
 			"deposit": newDeposit,
 		})
 
-		return ctx.
-			Status(http.StatusOK).
-			JSON(resp)
+		return ctx.Status(http.StatusOK).JSON(resp)
 	}
 }

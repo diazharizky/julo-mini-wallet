@@ -11,11 +11,9 @@ import (
 func main() {
 	appCtx := app.Ctx{}
 
-	db, err := db.New().DB()
-	if err != nil {
-		panic("error unable to initialize db")
-	}
+	db := db.New().DB()
 
+	appCtx.AccountRepository = repositories.NewAccountRepository(db)
 	appCtx.WalletRepository = repositories.NewWalletRepository(db)
 	appCtx.TransactionRepository = repositories.NewTransactionRepository(db)
 
