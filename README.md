@@ -15,7 +15,7 @@ The following are the instructions to run the app on your local
 
 ### Build the app
 
-First of all, we need to build our app into an executable/compiled file
+First of all, we need to build our app into a Docker image
 
 ```bash
 make build
