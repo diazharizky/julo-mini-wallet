@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/diazharizky/julo-mini-wallet/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,14 +18,18 @@ type dbClient struct {
 	sslMode  string
 }
 
+func init() {
+	config.Global.SetDefault("postgres.sslMode", "disable")
+}
+
 func New() dbClient {
 	return dbClient{
-		host:     "localhost",
-		port:     5432,
-		user:     "julo",
-		password: "julo",
-		dbName:   "julo",
-		sslMode:  "disable",
+		host:     config.Global.GetString("postgres.host"),
+		port:     config.Global.GetInt("postgres.port"),
+		user:     config.Global.GetString("postgres.user"),
+		password: config.Global.GetString("postgres.password"),
+		dbName:   config.Global.GetString("postgres.db"),
+		sslMode:  config.Global.GetString("postgres.sslMode"),
 	}
 }
 

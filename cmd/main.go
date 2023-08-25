@@ -1,12 +1,20 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/diazharizky/julo-mini-wallet/config"
 	"github.com/diazharizky/julo-mini-wallet/internal/app"
 	"github.com/diazharizky/julo-mini-wallet/internal/modules"
 	"github.com/diazharizky/julo-mini-wallet/internal/repositories"
 	"github.com/diazharizky/julo-mini-wallet/internal/server"
 	"github.com/diazharizky/julo-mini-wallet/pkg/db"
 )
+
+func init() {
+	config.Global.SetDefault("server.host", "localhost")
+	config.Global.SetDefault("server.port", "8080")
+}
 
 func main() {
 	appCtx := app.Ctx{}
@@ -26,5 +34,11 @@ func main() {
 
 	svr := server.New(appCtx)
 
-	svr.Listen(":80")
+	addr := fmt.Sprintf(
+		"%s:%s",
+		config.Global.GetString("server.host"),
+		config.Global.GetString("server.port"),
+	)
+
+	svr.Listen(addr)
 }
