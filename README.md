@@ -11,7 +11,7 @@ The following must be installed on your local in order to run the project proper
 
 ## Instructions
 
-The following are the instructions to run the app in your local
+The following are the instructions to run the app on your local
 
 ### Build the app
 
