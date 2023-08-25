@@ -22,6 +22,14 @@ func IsWalletEnabled(appCtx app.Ctx) func(*fiber.Ctx) error {
 				JSON(models.FatalResponse())
 		}
 
+		if wallet == nil {
+			return ctx.
+				Status(http.StatusNotFound).
+				JSON(models.FailedResponse(map[string]interface{}{
+					"error": "app: data cannot be found",
+				}))
+		}
+
 		if wallet.Status == enum.WalletStatusDisabled {
 			return ctx.
 				Status(http.StatusConflict).
